@@ -20,15 +20,10 @@ class ToneMatrix {
         event.preventDefault()
         navigator.clipboard.writeText(`https://tonematrix.audiotool.com/#${tm.model.pattern.serialize()}`)
     }
-    ;
-    (document.querySelector("button#studio") as HTMLButtonElement).onclick = (event: MouseEvent) => {
-        event.preventDefault()
-        window.open(`https://www.audiotool.com/`)
-    }
 
     // prevent dragging entire document on mobile
-    document.addEventListener('touchmove', (event: TouchEvent) => event.preventDefault(), {passive: false})
-    document.addEventListener('dblclick', (event: Event) => event.preventDefault(), {passive: false})
+    document.addEventListener("touchmove", (event: TouchEvent) => event.preventDefault(), {passive: false})
+    document.addEventListener("dblclick", (event: Event) => event.preventDefault(), {passive: false})
     const resize = () => document.body.style.height = `${window.innerHeight}px`
     window.addEventListener("resize", resize)
     resize()

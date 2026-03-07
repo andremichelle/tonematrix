@@ -60,22 +60,20 @@ canvas {
 }
 
 footer {
-  margin-top: 16px;
   display: flex;
   justify-content: space-between;
 }
 footer button {
-  color: inherit;
+  margin-top: 8px;
   border: none;
   outline: none;
   appearance: none;
-  padding: 8px;
   cursor: pointer;
-  background-color: #666;
-  border-radius: 1px;
+  background: none;
+  color: cadetblue;
 }
 footer button:active {
-  background-color: aqua;
+  color: white;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -27,12 +27,8 @@ class ToneMatrix {
         event.preventDefault();
         navigator.clipboard.writeText(`https://tonematrix.audiotool.com/#${tm.model.pattern.serialize()}`);
     };
-    document.querySelector("button#studio").onclick = (event) => {
-        event.preventDefault();
-        window.open(`https://www.audiotool.com/`);
-    };
-    document.addEventListener('touchmove', (event) => event.preventDefault(), { passive: false });
-    document.addEventListener('dblclick', (event) => event.preventDefault(), { passive: false });
+    document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
+    document.addEventListener("dblclick", (event) => event.preventDefault(), { passive: false });
     const resize = () => document.body.style.height = `${window.innerHeight}px`;
     window.addEventListener("resize", resize);
     resize();

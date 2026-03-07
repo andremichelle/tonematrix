@@ -7,7 +7,7 @@ export declare class Audio {
     static SEMIQUAVER: number;
     static RELEASE_TIME: number;
     static VOICE_GAIN: number;
-    static NOTES: Float32Array;
+    static NOTES: Float32Array<ArrayBuffer>;
     private readonly context;
     private readonly voiceMix;
     private nextScheduleTime;
