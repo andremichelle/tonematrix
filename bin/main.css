@@ -46,7 +46,7 @@ body {
 div.enabled-audio {
   top: 16px;
   left: 50%;
-  color: orange;
+  color: cadetblue;
   transform: translate(-50%, 0);
   position: absolute;
   visibility: hidden;

@@ -91,6 +91,7 @@ export class View {
         this.processFluid()
         this.graphics.imageSmoothingEnabled = false
         this.graphics.clearRect(0, 0, 512, 512)
+        this.graphics.globalCompositeOperation = "source-over"
         for (let y = 0; y < 16; y++) {
             for (let x = 0; x < 16; x++) {
                 const texture = this.model.pattern.getStep(x, y) ? this.stepTextureOn : this.stepTextureOff
@@ -132,14 +133,14 @@ export class View {
                 if (y > 0) amp += f0[x]
                 if (x < 15) amp += f1[x + 1]
                 if (y < 15) amp += f2[x]
-                amp = (amp * 0.5 - fmb[y][x]) * damp
+                amp = (amp * 0.25 - fmb[y][x]) * damp
                 if (amp < -1.0) {
                     amp = -1.0
                 } else if (amp > 1.0) {
                     amp = 1.0
                 }
                 fmb[y][x] = amp
-                const gray = Math.max(0, Math.min(128, (255 * amp) | 0))
+                const gray = Math.max(0, Math.min(255, (255 * amp ** 0.75) | 0))
                 const index = ((y << 4) | x) << 2
                 data[index] = gray
                 data[index + 1] = gray
