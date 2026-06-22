@@ -10,6 +10,10 @@ export const secondsToBars = (seconds, bpm) => {
     return seconds * bpm / 240.0
 }
 
+export const barsToFrames = (bars, bpm, sampleRate) => {
+    return (bars * 240.0 / bpm) / sampleRate
+}
+
 export const framesToBars = (frames, bpm, sampleRate) => {
     return (frames / sampleRate) * (bpm / 240.0)
 }
