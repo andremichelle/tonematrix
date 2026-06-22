@@ -1,0 +1,64 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  font-family: "Open Sans", sans-serif;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+  color: #2A2A2A;
+  background: black;
+}
+
+html { width: -webkit-fill-available; height: -webkit-fill-available; }
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 100vw/vh first, then mobile viewport bug fix */
+  min-width: 100vw; min-width: -webkit-fill-available;
+  min-height: 100vh; min-height: -webkit-fill-available;
+}
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hidden { display: none !important; }
+.invisible { visibility: hidden !important; }
+
+div.enabled-audio {
+  position: absolute;
+  top: 16px; left: 50%;
+  transform: translate(-50%, 0);
+  color: cadetblue;
+  visibility: hidden;
+}
+
+canvas {
+  position: relative;
+  width: min(512px, 80vmin);
+  height: min(512px, 80vmin);
+  filter: blur(1px);
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    margin-top: 8px;
+    appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    color: cadetblue;
+
+    &:active { color: white; }
+  }
+}
