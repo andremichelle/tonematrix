@@ -1,5 +1,5 @@
 import {attackRelease, barsToFrames, fragment, framesToBars, midiToFrequency} from "./dsp.js"
-import {Pattern} from "./pattern.js";
+import {Pattern} from "./pattern.js"
 
 const FREQUENCIES = new Float32Array([
     midiToFrequency(96), midiToFrequency(93), midiToFrequency(91), midiToFrequency(89),
@@ -21,9 +21,9 @@ class Voice {
     }
 
     process([l, r]) {
-        const ATTACK_TIME = 0.005;
-        const RELEASE_TIME = 0.2;
-        const GAIN = 0.25;
+        const ATTACK_TIME = 0.005
+        const RELEASE_TIME = 0.2
+        const GAIN = 0.25
 
         for (let i = this.#startIndex; i < 128; i++) {
             // AR envelope
@@ -71,7 +71,7 @@ registerProcessor("processor", class extends AudioWorkletProcessor {
             const {position, index} = frag
             const x = index & 15
             this.#stepIndex[0] = x
-            const startIndex = barsToFrames(position - p0) | 0;
+            const startIndex = barsToFrames(position - p0, this.#bpm, sampleRate) | 0
             for (let y = 0; y < 16; y++) {
                 if (this.#pattern.getStep(x, y)) {
                     this.#voices.push(new Voice(FREQUENCIES[y], (x / 15.0) * 2.0 - 1.0, startIndex))

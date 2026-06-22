@@ -1,0 +1,14 @@
+{
+    "name": "tonematrix",
+    "version": "1.0.0",
+    "private": true,
+    "description": "ToneMatrix — no build step; npm is only for the ESLint dev tooling.",
+    "scripts": {
+        "lint": "eslint src serve.mjs"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.0.0",
+        "eslint": "^9.0.0",
+        "globals": "^15.0.0"
+    }
+}

@@ -31,7 +31,7 @@ export class View {
     #stepIndex
     #canvas
 
-    #fluidMapIndex = 0 // 0 | 1
+    #fluidMapIndex = 0 // 0 | 1 (double buffering)
     #lastStepIndex = -1
 
     constructor(pattern, stepIndex, canvas) {
@@ -78,13 +78,6 @@ export class View {
         this.#canvas.addEventListener("touchstart", listener)
         this.#canvas.addEventListener("mousemove", listener)
         this.#canvas.addEventListener("touchmove", listener)
-        window.addEventListener("pointerdown", event => {
-            if (event.target instanceof HTMLButtonElement || event.target === this.#canvas) {
-                return
-            }
-            this.#pattern.clear()
-            event.preventDefault()
-        }, {capture: false})
         window.addEventListener("keydown", event => {
             if (event.code === "Space") {
                 this.#pattern.clear()

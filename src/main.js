@@ -13,10 +13,6 @@ import {View} from "./view.js"
 
     new View(pattern, stepIndex, canvas)
 
-    if (location.hash !== "") {
-        pattern.deserialize(location.hash.substring(1))
-    }
-
     const context = new AudioContext()
     await context.audioWorklet.addModule(new URL("./processor.js", import.meta.url))
     const node = new AudioWorkletNode(context, "processor", {

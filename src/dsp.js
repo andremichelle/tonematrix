@@ -1,22 +1,12 @@
-export const midiToFrequency = (note) => {
-    return 440.0 * Math.pow(2.0, (note + 3.0) / 12.0 - 6.0)
-}
+export const midiToFrequency = (note) => 440.0 * Math.pow(2.0, (note + 3.0) / 12.0 - 6.0)
 
-export const barsToSeconds = (bars, bpm) => {
-    return bars * 240.0 / bpm
-}
+export const barsToSeconds = (bars, bpm) => bars * 240.0 / bpm
 
-export const secondsToBars = (seconds, bpm) => {
-    return seconds * bpm / 240.0
-}
+export const secondsToBars = (seconds, bpm) => seconds * bpm / 240.0
 
-export const barsToFrames = (bars, bpm, sampleRate) => {
-    return (bars * 240.0 / bpm) / sampleRate
-}
+export const barsToFrames = (bars, bpm, sampleRate) => (bars * 240.0 / bpm) * sampleRate
 
-export const framesToBars = (frames, bpm, sampleRate) => {
-    return (frames / sampleRate) * (bpm / 240.0)
-}
+export const framesToBars = (frames, bpm, sampleRate) => (frames / sampleRate) * (bpm / 240.0)
 
 export const attackRelease = (seconds, attachTime, releaseTime) =>
     Math.max(0.0, Math.min(seconds / attachTime, 1.0 - (seconds - attachTime) / releaseTime))
