@@ -10,7 +10,8 @@ import {View} from "./view.js"
     const canvas = document.querySelector("canvas#matrix")
     const pattern = new Pattern(new SharedArrayBuffer(Pattern.BYTE_LENGTH))
     const stepIndex = new Uint8Array(new SharedArrayBuffer(1))
-    const view = new View(pattern, stepIndex, canvas)
+
+    new View(pattern, stepIndex, canvas)
 
     if (location.hash !== "") {
         pattern.deserialize(location.hash.substring(1))

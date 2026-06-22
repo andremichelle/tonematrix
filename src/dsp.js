@@ -18,6 +18,9 @@ export const framesToBars = (frames, bpm, sampleRate) => {
     return (frames / sampleRate) * (bpm / 240.0)
 }
 
+export const attackRelease = (seconds, attachTime, releaseTime) =>
+    Math.max(0.0, Math.min(seconds / attachTime, 1.0 - (seconds - attachTime) / releaseTime))
+
 export function* fragment(p0, p1, stepSize) {
     let index = Math.ceil(p0 / stepSize)
     let position = index * stepSize

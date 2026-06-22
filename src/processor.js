@@ -1,4 +1,4 @@
-import {barsToFrames, fragment, framesToBars, midiToFrequency} from "./dsp.js"
+import {attackRelease, barsToFrames, fragment, framesToBars, midiToFrequency} from "./dsp.js"
 import {Pattern} from "./pattern.js";
 
 const FREQUENCIES = new Float32Array([
@@ -27,7 +27,7 @@ class Voice {
 
         for (let i = this.#startIndex; i < 128; i++) {
             // AR envelope
-            const env = Math.max(0.0, Math.min(this.#phase / ATTACK_TIME, 1.0 - (this.#phase - ATTACK_TIME) / RELEASE_TIME)) * GAIN
+            const env = attackRelease(this.#phase, ATTACK_TIME, RELEASE_TIME) * GAIN
 
             // Oscillator
             const sine = Math.sin(2.0 * Math.PI * this.#frequency * this.#phase) * env
