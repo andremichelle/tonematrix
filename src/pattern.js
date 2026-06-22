@@ -1,7 +1,15 @@
 export class Pattern {
-    #data = new Uint32Array(16)
+    static BYTE_LENGTH = 16 * Uint32Array.BYTES_PER_ELEMENT
 
-    constructor() {}
+    #data
+
+    constructor(buffer) {
+        this.#data = new Uint32Array(buffer)
+    }
+
+    get buffer() {
+        return this.#data.buffer
+    }
 
     serialize() {
         let r = []
@@ -16,7 +24,8 @@ export class Pattern {
             code.split(".")
                 .map(c => parseInt(c, 32))
                 .forEach((value, index) => this.#data[index] = value)
-        } catch (e) {}
+        } catch (e) {
+        }
     }
 
     setStep(x, y, value) {
@@ -33,14 +42,5 @@ export class Pattern {
 
     clear() {
         this.#data.fill(0)
-    }
-}
-
-export class Model {
-    pattern = new Pattern()
-
-    stepIndex = 0 | 0
-
-    constructor() {
     }
 }

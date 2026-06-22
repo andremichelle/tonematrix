@@ -1,6 +1,4 @@
-const midiToFrequency = (note) => {
-    return 440.0 * Math.pow(2.0, (note + 3.0) / 12.0 - 6.0)
-}
+import {barsToSeconds, midiToFrequency, secondsToBars} from "./dsp.js"
 
 export class Audio {
     static LOOK_AHEAD_TIME = 0.010
@@ -31,32 +29,29 @@ export class Audio {
     #context = new AudioContext()
     #voiceMix = this.#context.createGain()
 
-    #model
+    #pattern
 
     #nextScheduleTime = 0.0
     #absoluteTime = 0.0
     #intervalId = -1
     #bpm = 120.0
 
-    constructor(model) {
-        this.#model = model
+    constructor(pattern) {
+        this.#pattern = pattern
         this.#buildFxChain()
 
         if (this.#context.state === "running") {
             this.start()
         } else {
-            const toast = document.querySelector("div.enabled-audio")
-            toast.style.visibility = "visible"
-            const options = {capture: true}
+            const capture = {capture: true}
             const listener = event => {
-                toast.style.visibility = "hidden"
                 event.preventDefault()
                 this.#context.resume().then(() => this.start())
-                window.removeEventListener("mousedown", listener, options)
-                window.removeEventListener("touchstart", listener, options)
+                window.removeEventListener("mousedown", listener, capture)
+                window.removeEventListener("touchstart", listener, capture)
             }
-            window.addEventListener("mousedown", listener, options)
-            window.addEventListener("touchstart", listener, options)
+            window.addEventListener("mousedown", listener, capture)
+            window.addEventListener("touchstart", listener, capture)
         }
     }
 
@@ -71,8 +66,8 @@ export class Audio {
             if (now + Audio.LOOK_AHEAD_TIME >= this.#nextScheduleTime) {
                 const m0 = this.#absoluteTime
                 const m1 = m0 + Audio.SCHEDULE_TIME
-                const t0 = this.#secondsToBars(m0)
-                const t1 = this.#secondsToBars(m1)
+                const t0 = secondsToBars(m0, this.#bpm)
+                const t1 = secondsToBars(m1, this.#bpm)
                 this.#schedule(t0, t1)
                 this.#absoluteTime += Audio.SCHEDULE_TIME
                 this.#nextScheduleTime += Audio.SCHEDULE_TIME
@@ -104,28 +99,20 @@ export class Audio {
                 const time = this.#computeStartOffset(barPosition)
                 const x = index & 15
                 for (let y = 0; y < 16; y++) {
-                    if (this.#model.pattern.getStep(x, y)) {
+                    if (this.#pattern.getStep(x, y)) {
                         this.#playVoice(time, y)
                     }
                 }
             }
             barPosition = ++index * Audio.SEMIQUAVER
         }
-        const bars = this.#secondsToBars(this.#absoluteTime + Audio.SCHEDULE_TIME)
-        this.#model.stepIndex = (Math.floor(bars / Audio.SEMIQUAVER) - 1) & 15
+        const bars = secondsToBars(this.#absoluteTime + Audio.SCHEDULE_TIME, this.#bpm)
+        this.#pattern.stepIndex = (Math.floor(bars / Audio.SEMIQUAVER) - 1) & 15
     }
 
     #computeStartOffset(barPosition) {
         return (this.#nextScheduleTime - this.#absoluteTime) +
-            this.#barsToSeconds(barPosition) + Audio.ADDITIONAL_LATENCY
-    }
-
-    #barsToSeconds(bars) {
-        return bars * 240.0 / this.#bpm
-    }
-
-    #secondsToBars(seconds) {
-        return seconds * this.#bpm / 240.0
+            barsToSeconds(barPosition, this.#bpm) + Audio.ADDITIONAL_LATENCY
     }
 
     #playVoice(time, rowIndex) {
@@ -148,7 +135,7 @@ export class Audio {
 
     #buildFxChain() {
         const delay = this.#context.createDelay()
-        delay.delayTime.value = this.#barsToSeconds(3.0 / 16.0)
+        delay.delayTime.value = barsToSeconds(3.0 / 16.0, this.#bpm)
         const feedbackGain = this.#context.createGain()
         feedbackGain.gain.value = 0.4
         const wetGain = this.#context.createGain()

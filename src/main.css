@@ -31,14 +31,6 @@ body {
 .hidden { display: none !important; }
 .invisible { visibility: hidden !important; }
 
-div.enabled-audio {
-  position: absolute;
-  top: 16px; left: 50%;
-  transform: translate(-50%, 0);
-  color: cadetblue;
-  visibility: hidden;
-}
-
 canvas {
   position: relative;
   width: min(512px, 80vmin);

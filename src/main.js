@@ -1,40 +1,33 @@
-import {Model} from "./model.js"
+import {Pattern} from "./pattern.js"
 import {View} from "./view.js"
-import {Audio} from "./audio.js"
-
-class ToneMatrix {
-    model = new Model()
-    view
-    audio
-
-    #canvas
-
-    constructor(canvas) {
-        this.#canvas = canvas
-        this.view = new View(this.model, this.#canvas)
-        this.audio = new Audio(this.model)
-    }
-}
 
 (async () => {
-    const tm = new ToneMatrix(document.querySelector("canvas#matrix"))
-    if (location.hash !== "") {
-        tm.model.pattern.deserialize(location.hash.substring(1))
-    }
-    document.querySelector("button#link").onclick = (event) => {
-        event.preventDefault()
-        navigator.clipboard.writeText(`https://tonematrix.audiotool.com/#${tm.model.pattern.serialize()}`)
+    if (!self.crossOriginIsolated) {
+        alert("SharedArrayBuffer disabled (cross-origin not isolated).")
+        return
     }
 
-    // prevent dragging entire document on mobile
+    const canvas = document.querySelector("canvas#matrix")
+    const pattern = new Pattern(new SharedArrayBuffer(Pattern.BYTE_LENGTH))
+    const view = new View(pattern, canvas)
+
+    if (location.hash !== "") {
+        pattern.deserialize(location.hash.substring(1))
+    }
+
+    const context = new AudioContext()
+    await context.audioWorklet.addModule(new URL("./processor.js", import.meta.url))
+    const node = new AudioWorkletNode(context, "processor", {
+        outputChannelCount: [2],
+        processorOptions: {buffer: pattern.buffer}
+    })
+    node.connect(context.destination)
+
+    // prevent mobile quirks
     document.addEventListener("touchmove", (event) => event.preventDefault(), {passive: false})
     document.addEventListener("dblclick", (event) => event.preventDefault(), {passive: false})
     const resize = () => document.body.style.height = `${window.innerHeight}px`
     window.addEventListener("resize", resize)
     resize()
-    requestAnimationFrame(() => {
-        document.querySelectorAll("body svg.preloader").forEach(element => element.remove())
-        document.querySelectorAll("body main").forEach(element => element.classList.remove("invisible"))
-    })
     console.debug("boot complete.")
 })()

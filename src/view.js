@@ -1,5 +1,3 @@
-import {ArrayUtils} from "./common.js"
-
 export class View {
     #graphics
     #stepTextureOn = View.#createStepTexture("#FFFFFF", "#DADADA")
@@ -7,18 +5,18 @@ export class View {
     #wavesData = new ImageData(16, 16)
     #waves = View.#create2dContext(16)
     #fluidMaps = [
-        ArrayUtils.fill(16, () => new Float32Array(16)),
-        ArrayUtils.fill(16, () => new Float32Array(16))
+        Array.from({length: 16}, () => new Float32Array(16)),
+        Array.from({length: 16}, () => new Float32Array(16))
     ]
 
-    #model
+    #pattern
     #canvas
 
     #fluidMapIndex = 0
     #stepIndex = -1
 
-    constructor(model, canvas) {
-        this.#model = model
+    constructor(pattern, canvas) {
+        this.#pattern = pattern
         this.#canvas = canvas
         this.#graphics = this.#canvas.getContext("2d")
         this.#canvas.width = 512
@@ -64,18 +62,18 @@ export class View {
             if (event.target instanceof HTMLButtonElement || event.target === this.#canvas) {
                 return
             }
-            this.#model.pattern.clear()
+            this.#pattern.clear()
             event.preventDefault()
         }, {capture: false})
         window.addEventListener("keydown", event => {
             if (event.code === "Space") {
-                this.#model.pattern.clear()
+                this.#pattern.clear()
             }
         }, {capture: true})
     }
 
     #setStep(x, y, value) {
-        this.#model.pattern.setStep(x, y, value)
+        this.#pattern.setStep(x, y, value)
         if (value) {
             this.#touchFluid(x, y)
         }
@@ -87,7 +85,7 @@ export class View {
     }
 
     #getStep(x, y) {
-        return this.#model.pattern.getStep(x, y)
+        return this.#pattern.getStep(x, y)
     }
 
     #processAnimationFrame = () => {
@@ -98,7 +96,7 @@ export class View {
         this.#graphics.globalCompositeOperation = "source-over"
         for (let y = 0; y < 16; y++) {
             for (let x = 0; x < 16; x++) {
-                const texture = this.#model.pattern.getStep(x, y) ? this.#stepTextureOn : this.#stepTextureOff
+                const texture = this.#pattern.getStep(x, y) ? this.#stepTextureOn : this.#stepTextureOff
                 this.#graphics.drawImage(texture, x << 5, y << 5)
             }
         }
@@ -111,10 +109,10 @@ export class View {
     }
 
     #touchActives() {
-        if (this.#stepIndex !== this.#model.stepIndex) {
-            this.#stepIndex = this.#model.stepIndex
+        if (this.#stepIndex !== this.#pattern.stepIndex) {
+            this.#stepIndex = this.#pattern.stepIndex
             for (let y = 0; y < 16; ++y) {
-                if (this.#model.pattern.getStep(this.#stepIndex, y)) {
+                if (this.#pattern.getStep(this.#stepIndex, y)) {
                     this.#touchFluid(this.#stepIndex, y)
                 }
             }
