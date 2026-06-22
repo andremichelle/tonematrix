@@ -10,13 +10,15 @@ const NOTES = new Float32Array([
 
 registerProcessor("processor", class extends AudioWorkletProcessor {
     #pattern
+    #stepIndex
     #bars = 0.0
     #bpm = 120.0
 
     constructor(options) {
         super()
 
-        this.#pattern = new Pattern(options.processorOptions.buffer)
+        this.#pattern = new Pattern(options.processorOptions.pattern)
+        this.#stepIndex = new Uint8Array(options.processorOptions.stepIndex)
     }
 
     process(_inputs, [output]) {
@@ -28,6 +30,7 @@ registerProcessor("processor", class extends AudioWorkletProcessor {
         for (const frag of fragment(p0, p1, stepSize)) {
             const {position, index} = frag
             const x = index & 15
+            this.#stepIndex[0] = x
             for (let y = 0; y < 16; y++) {
                 if (this.#pattern.getStep(x, y)) {
                     console.debug(index, position)

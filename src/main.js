@@ -9,7 +9,8 @@ import {View} from "./view.js"
 
     const canvas = document.querySelector("canvas#matrix")
     const pattern = new Pattern(new SharedArrayBuffer(Pattern.BYTE_LENGTH))
-    const view = new View(pattern, canvas)
+    const stepIndex = new Uint8Array(new SharedArrayBuffer(1))
+    const view = new View(pattern, stepIndex, canvas)
 
     if (location.hash !== "") {
         pattern.deserialize(location.hash.substring(1))
@@ -19,7 +20,7 @@ import {View} from "./view.js"
     await context.audioWorklet.addModule(new URL("./processor.js", import.meta.url))
     const node = new AudioWorkletNode(context, "processor", {
         outputChannelCount: [2],
-        processorOptions: {buffer: pattern.buffer}
+        processorOptions: {pattern: pattern.buffer, stepIndex: stepIndex.buffer}
     })
     node.connect(context.destination)
 

@@ -1,8 +1,26 @@
 export class View {
+    static #create2dContext(size) {
+        const canvas = document.createElement("canvas")
+        canvas.width = canvas.height = size
+        return canvas.getContext("2d")
+    }
+
+    static #createStepTexture(outline, inline) {
+        const texture = View.#create2dContext(32)
+        texture.save()
+        texture.fillStyle = outline
+        texture.fillRect(2, 2, 28, 28)
+        texture.fillStyle = inline
+        texture.fillRect(4, 4, 24, 24)
+        texture.restore()
+        return texture.canvas
+    }
+
     #graphics
     #stepTextureOn = View.#createStepTexture("#FFFFFF", "#DADADA")
     #stepTextureOff = View.#createStepTexture("#4F4F4F", "#2A2A2A")
     #wavesData = new ImageData(16, 16)
+
     #waves = View.#create2dContext(16)
     #fluidMaps = [
         Array.from({length: 16}, () => new Float32Array(16)),
@@ -10,13 +28,15 @@ export class View {
     ]
 
     #pattern
+    #stepIndex
     #canvas
 
-    #fluidMapIndex = 0
-    #stepIndex = -1
+    #fluidMapIndex = 0 // 0 | 1
+    #lastStepIndex = -1
 
-    constructor(pattern, canvas) {
+    constructor(pattern, stepIndex, canvas) {
         this.#pattern = pattern
+        this.#stepIndex = stepIndex
         this.#canvas = canvas
         this.#graphics = this.#canvas.getContext("2d")
         this.#canvas.width = 512
@@ -109,11 +129,12 @@ export class View {
     }
 
     #touchActives() {
-        if (this.#stepIndex !== this.#pattern.stepIndex) {
-            this.#stepIndex = this.#pattern.stepIndex
+        const stepIndex = this.#stepIndex[0]
+        if (this.#lastStepIndex !== stepIndex) {
+            this.#lastStepIndex = stepIndex
             for (let y = 0; y < 16; ++y) {
-                if (this.#pattern.getStep(this.#stepIndex, y)) {
-                    this.#touchFluid(this.#stepIndex, y)
+                if (this.#pattern.getStep(stepIndex, y)) {
+                    this.#touchFluid(stepIndex, y)
                 }
             }
         }
@@ -124,7 +145,7 @@ export class View {
         const fmb = this.#fluidMaps[1 - this.#fluidMapIndex]
         const wavesData = this.#wavesData
         const data = wavesData.data
-        const damp = 0.86
+        const damp = 0.88
         for (let y = 0; y < 16; ++y) {
             const f0 = fma[y - 1]
             const f1 = fma[y]
@@ -142,7 +163,7 @@ export class View {
                     amp = 1.0
                 }
                 fmb[y][x] = amp
-                const gray = Math.max(0, Math.min(255, (255 * amp ** 0.75) | 0))
+                const gray = Math.max(0, Math.min(255, (255 * amp ** 0.5) | 0))
                 const index = ((y << 4) | x) << 2
                 data[index] = gray
                 data[index + 1] = gray
@@ -152,26 +173,5 @@ export class View {
         }
         this.#fluidMapIndex = 1 - this.#fluidMapIndex
         this.#waves.putImageData(wavesData, 0, 0)
-    }
-
-    get domElement() {
-        return this.#canvas
-    }
-
-    static #createStepTexture(outline, inline) {
-        const texture = View.#create2dContext(32)
-        texture.save()
-        texture.fillStyle = outline
-        texture.fillRect(2, 2, 28, 28)
-        texture.fillStyle = inline
-        texture.fillRect(4, 4, 24, 24)
-        texture.restore()
-        return texture.canvas
-    }
-
-    static #create2dContext(size) {
-        const canvas = document.createElement("canvas")
-        canvas.width = canvas.height = size
-        return canvas.getContext("2d")
     }
 }
