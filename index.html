@@ -3,19 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Tonematrix</title>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
-    <meta content="no-cache" http-equiv="Pragma"/>
-    <meta content="0" http-equiv="Expires"/>
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <link rel="icon" href="favicon.svg" type=“image/x-icon”>
-    <link rel="shortcut icon" href="./favicon.svg" type=“image/x-icon”>
-    <link rel="preload" href="./fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf" as="font" type="font/ttf"
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf" as="font" type="font/ttf"
           crossorigin>
-    <link href="./bin/main.css" rel="stylesheet"/>
-    <script src="./bin/main.js" type="module"></script>
+    <script src="/typescript/main.ts" type="module"></script>
 </head>
 <body>
 <div class="enabled-audio">CLICK TO RUN AUDIO</div>
@@ -23,6 +19,7 @@
     <canvas id="matrix"></canvas>
     <footer>
         <button id="link">Copy Link</button>
+        <a id="source" href="https://github.com/andremichelle/tonematrix" target="_blank" rel="noopener">Source Code</a>
     </footer>
 </div>
 </body>

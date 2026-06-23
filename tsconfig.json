@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "es2020",
+      "DOM"
+    ],
+    "strict": false,
+    "alwaysStrict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": false
+  },
+  "include": [
+    "typescript/**/*.ts",
+    "vite.config.ts"
+  ]
+}

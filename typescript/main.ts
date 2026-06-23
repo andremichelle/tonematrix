@@ -1,3 +1,4 @@
+import "../sass/main.sass"
 import {Model} from "./tonematrix/model.js"
 import {View} from "./tonematrix/view.js"
 import {Audio} from "./tonematrix/audio.js"
@@ -18,7 +19,7 @@ class ToneMatrix {
     }
     (document.querySelector("button#link") as HTMLButtonElement).onclick = (event: MouseEvent) => {
         event.preventDefault()
-        navigator.clipboard.writeText(`https://tonematrix.audiotool.com/#${tm.model.pattern.serialize()}`)
+        navigator.clipboard.writeText(`${location.origin}${location.pathname}#${tm.model.pattern.serialize()}`)
     }
 
     // prevent dragging entire document on mobile
