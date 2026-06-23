@@ -44,11 +44,8 @@ export class Audio {
         if (this.context.state === "running") {
             this.start()
         } else {
-            const toast = document.querySelector("div.enabled-audio") as HTMLElement
-            toast.style.visibility = "visible"
             const options = {capture: true}
             const listener = event => {
-                toast.style.visibility = "hidden"
                 event.preventDefault()
                 this.context.resume().then(() => this.start())
                 window.removeEventListener("mousedown", listener, options)

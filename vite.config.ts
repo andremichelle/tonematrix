@@ -4,6 +4,13 @@ import {defineConfig} from "vite"
 // (https://andremichelle.github.io/tonematrix/) and on custom domains.
 export default defineConfig({
     base: "./",
+    css: {
+        preprocessorOptions: {
+            sass: {
+                api: "modern-compiler"
+            }
+        }
+    },
     build: {
         outDir: "dist",
         target: "es2020"
